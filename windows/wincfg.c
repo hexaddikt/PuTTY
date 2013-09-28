@@ -308,7 +308,10 @@ void win_setup_config_box(struct controlbox *b, HWND *hwndp, int has_help,
     ctrl_checkbox(s, "Use system colours", 's',
                   HELPCTX(colours_system),
                   conf_checkbox_handler, I(CONF_system_colour));
-
+	/* JPJ commented out because setting the keyboard shortcut is crashing the program (shortcuts isn't allocated or the size we want?)
+	ctrl_checkbox(s, "Use global colour settings", 'g',
+		HELPCTX(colours_global), conf_checkbox_handler,
+		I(CONF_global_colour));*/
 
     /*
      * Resize-by-changing-font is a Windows insanity.

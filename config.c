@@ -601,6 +601,24 @@ static int load_selected_session(struct sessionsaver_data *ssd,
     return 1;
 }
 
+/* non-standard function */
+char* strcasestr(const char *dst, const char *src)
+{
+	int len, dc, sc;
+
+	if (src[0] == '\0')
+		return (char*)(uintptr_t)dst;
+
+	len = strlen(src) - 1;
+	sc  = tolower(src[0]);
+	for (; (dc = *dst); dst++) {
+		dc = tolower(dc);
+		if (sc == dc && (len == 0 || !strnicmp(dst+1, src+1, len)))
+			return (char*)(uintptr_t)dst;
+	}
+	return NULL;
+}
+
 static void sessionsaver_handler(union control *ctrl, void *dlg,
 				 void *data, int event)
 {
@@ -643,12 +661,22 @@ static void sessionsaver_handler(union control *ctrl, void *dlg,
 	    dlg_update_done(ctrl, dlg);
 	}
     } else if (event == EVENT_VALCHANGE) {
-        int top, bottom, halfway, i;
+        int found, i;
 	if (ctrl == ssd->editbox) {
 	    char *tmp = dlg_editbox_get(ctrl, dlg);
 	    strncpy(savedsession, tmp, SAVEDSESSION_LEN);
 	    sfree(tmp);
-	    top = ssd->sesslist.nsessions;
+		/* want to be able to search case-insensitive and within the session string */
+		found = -1;
+		for (i = 0; i < ssd->sesslist.nsessions; i++)
+		{
+			if (strcasestr(ssd->sesslist.sessions[i], savedsession) != NULL)
+			{
+				found = i;	
+				break;
+			}
+		}
+	    /*top = ssd->sesslist.nsessions;
 	    bottom = -1;
 	    while (top-bottom > 1) {
 	        halfway = (top+bottom)/2;
@@ -661,8 +689,10 @@ static void sessionsaver_handler(union control *ctrl, void *dlg,
 	    }
 	    if (top == ssd->sesslist.nsessions) {
 	        top -= 1;
-	    }
-	    dlg_listbox_select(ssd->listbox, dlg, top);
+	    }*/
+
+	    //dlg_listbox_select(ssd->listbox, dlg, top);
+		dlg_listbox_select(ssd->listbox, dlg, found);
 	}
     } else if (event == EVENT_ACTION) {
 	int mbl = FALSE;
@@ -1803,6 +1833,10 @@ void setup_config_box(struct controlbox *b, int midsession,
                       "The colour", I(2),
                       "Both", I(3),
                       NULL);
+	/* JPJ commented out because setting the keyboard shortcut is crashing the program (shortcut is already used)*/
+	ctrl_checkbox(s, "Use global colour settings", 't',
+		HELPCTX(colours_global), conf_checkbox_handler,
+		I(CONF_global_colour));
 
     str = dupprintf("Adjust the precise colours %s displays", appname);
     s = ctrl_getset(b, "Window/Colours", "adjust", str);

@@ -562,6 +562,7 @@ void save_open_settings(void *sesskey, Conf *conf)
     write_setting_i(sesskey, "TryPalette", conf_get_int(conf, CONF_try_palette));
     write_setting_i(sesskey, "ANSIColour", conf_get_int(conf, CONF_ansi_colour));
     write_setting_i(sesskey, "Xterm256Colour", conf_get_int(conf, CONF_xterm_256_colour));
+	write_setting_i(sesskey, "UseGlobalColours", conf_get_int(conf, CONF_global_colour));
     write_setting_i(sesskey, "BoldAsColour", conf_get_int(conf, CONF_bold_style)-1);
 
     for (i = 0; i < 22; i++) {
@@ -866,15 +867,26 @@ void load_open_settings(void *sesskey, Conf *conf)
     gppi(sesskey, "TryPalette", 0, conf, CONF_try_palette);
     gppi(sesskey, "ANSIColour", 1, conf, CONF_ansi_colour);
     gppi(sesskey, "Xterm256Colour", 1, conf, CONF_xterm_256_colour);
+	gppi(sesskey, "UseGlobalColours", 1, conf, CONF_global_colour);
     i = gppi_raw(sesskey, "BoldAsColour", 0); conf_set_int(conf, CONF_bold_style, i+1);
 
     for (i = 0; i < 22; i++) {
 	static const char *const defaults[] = {
-	    "187,187,187", "255,255,255", "0,0,0", "85,85,85", "0,0,0",
+	    /* JPJ in time, these defaults will be stored in the registry 
+		and accessible via the colour modification dialog. This will allow the
+		user to override the per-session colour presets with a single global colour setting.
+
+		"187,187,187", "255,255,255", "0,0,0", "85,85,85", "0,0,0",
 	    "0,255,0", "0,0,0", "85,85,85", "187,0,0", "255,85,85",
 	    "0,187,0", "85,255,85", "187,187,0", "255,255,85", "0,0,187",
 	    "85,85,255", "187,0,187", "255,85,255", "0,187,187",
-	    "85,255,255", "187,187,187", "255,255,255"
+	    "85,255,255", "187,187,187", "255,255,255"*/
+
+		"255,255,255", "255,255,255", "51,51,51", "85,85,85", "0,0,0",
+		"0,255,0", "77,77,77", "85,85,85", "255,43,43", "255,85,85",
+		"152,251,152", "85,255,85", "240,230,140", "255,255,85",
+		"205,133,63", "135,206,235", "255,222,173", "255,85,255", 
+		"255,160,160", "255,215,0", "245,222,179","255,255,255"
 	};
 	char buf[20], *buf2;
 	int c0, c1, c2;

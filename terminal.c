@@ -1375,6 +1375,7 @@ void term_copy_stuff_from_conf(Terminal *term)
     term->scroll_on_disp = conf_get_int(term->conf, CONF_scroll_on_disp);
     term->scroll_on_key = conf_get_int(term->conf, CONF_scroll_on_key);
     term->xterm_256_colour = conf_get_int(term->conf, CONF_xterm_256_colour);
+	term->use_global_colour = conf_get_int(term->conf, CONF_global_colour);
 
     /*
      * Parse the control-character escapes in the configured

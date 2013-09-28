@@ -3,6 +3,7 @@
 
 #include <stddef.h>		       /* for wchar_t */
 
+#define SECURITY_WIN32 1
 /*
  * Global variables. Most modules declare these `extern', but
  * window.c will do `#define PUTTY_DO_GLOBALS' before including this
@@ -790,6 +791,7 @@ void cleanup_exit(int);
     X(INT, NONE, ansi_colour) \
     X(INT, NONE, xterm_256_colour) \
     X(INT, NONE, system_colour) \
+	X(INT, NONE, global_colour) \
     X(INT, NONE, try_palette) \
     X(INT, NONE, bold_style) \
     X(INT, INT, colours) \

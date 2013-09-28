@@ -124,6 +124,7 @@
 #define WINHELP_CTX_colours_system "colours.system:config-syscolour"
 #define WINHELP_CTX_colours_logpal "colours.logpal:config-logpalette"
 #define WINHELP_CTX_colours_config "colours.config:config-colourcfg"
+#define WINHELP_CTX_colours_global "colours.global:config-globalcolour"
 #define WINHELP_CTX_translation_codepage "translation.codepage:config-charset"
 #define WINHELP_CTX_translation_cjk_ambig_wide "translation.cjkambigwide:config-cjk-ambig-wide"
 #define WINHELP_CTX_translation_cyrillic "translation.cyrillic:config-cyr"

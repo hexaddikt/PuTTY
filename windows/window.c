@@ -1155,12 +1155,51 @@ static void conftopalette(void)
 	4, 12, 5, 13, 6, 14, 7, 15
     };
 
-    for (i = 0; i < 22; i++) {
-	int w = ww[i];
-	defpal[w].rgbtRed = conf_get_int_int(conf, CONF_colours, i*3+0);
-	defpal[w].rgbtGreen = conf_get_int_int(conf, CONF_colours, i*3+1);
-	defpal[w].rgbtBlue = conf_get_int_int(conf, CONF_colours, i*3+2);
-    }
+	/* JPJ Override with global colours if selected, for now the default for
+	this setting is to override*/
+    if (conf_get_int(conf, CONF_global_colour))
+	{
+		/* use global instead of conf colours */
+		static const char *const defaults[] = {
+			/* JPJ in time, these defaults will be stored in the registry 
+			and accessible via the colour modification dialog. This will allow the
+			user to override the per-session colour presets with a single global colour setting.
+
+			Following are the defaults that originally came from svn trunk
+			"187,187,187", "255,255,255", "0,0,0", "85,85,85", "0,0,0",
+			"0,255,0", "0,0,0", "85,85,85", "187,0,0", "255,85,85",
+			"0,187,0", "85,255,85", "187,187,0", "255,255,85", "0,0,187",
+			"85,85,255", "187,0,187", "255,85,255", "0,187,187",
+			"85,255,255", "187,187,187", "255,255,255"*/
+
+			"255,255,255", "255,255,255", "51,51,51", "85,85,85", "0,0,0",
+			"0,255,0", "77,77,77", "85,85,85", "255,43,43", "255,85,85",
+			"152,251,152", "85,255,85", "240,230,140", "255,255,85",
+			"205,133,63", "135,206,235", "255,222,173", "255,85,255", 
+			"255,160,160", "255,215,0", "245,222,179","255,255,255"
+		};
+		int c0, c1, c2;
+		for (i = 0; i < 22; i++) 
+		{
+			if (sscanf(defaults[i], "%d,%d,%d", &c0, &c1, &c2) == 3) 
+			{
+				int w = ww[i];
+				defpal[w].rgbtRed = c0;
+				defpal[w].rgbtGreen = c1;
+				defpal[w].rgbtBlue = c2;
+			}
+		}
+	}
+	else
+	{
+		for (i = 0; i < 22; i++) {
+			int w = ww[i];
+			defpal[w].rgbtRed = conf_get_int_int(conf, CONF_colours, i*3+0);
+			defpal[w].rgbtGreen = conf_get_int_int(conf, CONF_colours, i*3+1);
+			defpal[w].rgbtBlue = conf_get_int_int(conf, CONF_colours, i*3+2);
+		}
+	}
+
     for (i = 0; i < NEXTCOLOURS; i++) {
 	if (i < 216) {
 	    int r = i / 36, g = (i / 6) % 6, b = i % 6;

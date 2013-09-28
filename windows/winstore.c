@@ -20,6 +20,7 @@
 static const char *const reg_jumplist_key = PUTTY_REG_POS "\\Jumplist";
 static const char *const reg_jumplist_value = "Recent sessions";
 static const char *const puttystr = PUTTY_REG_POS "\\Sessions";
+static const char *const globalsettingstr = PUTTY_REG_POS "\\GlobalSettings";
 
 static const char hex[16] = "0123456789ABCDEF";
 
@@ -447,6 +448,26 @@ void store_host_key(const char *hostname, int port,
     } /* else key does not exist in registry */
 
     sfree(regname);
+}
+
+void store_global_colours(void)
+{
+    HKEY rkey;
+
+    if (RegCreateKey(HKEY_CURRENT_USER, globalsettingstr,
+		     &rkey) == ERROR_SUCCESS) {
+		int i;
+		for (i = 0; i < 22; i++) {
+			char buf[20], buf2[30];
+			sprintf(buf, "Colour%d", i);
+			/*sprintf(buf2, "%d,%d,%d",
+				conf_get_int_int(conf, CONF_colours, i*3+0),
+				conf_get_int_int(conf, CONF_colours, i*3+1),
+				conf_get_int_int(conf, CONF_colours, i*3+2));
+			write_setting_s(rkey, buf, buf2);*/
+		}
+		RegCloseKey(rkey);
+    } /* else key does not exist in registry */
 }
 
 /*
