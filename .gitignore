@@ -1,0 +1,6 @@
+.svn
+ipch
+Debug
+Release
+*.suo
+*.user
